@@ -106,6 +106,7 @@ export function DashboardShell() {
                 "tokens Tailwind v4",
                 "componentes shadcn/ui",
                 "modulos de dashboard",
+                "helpers Supabase",
               ].map((item, index) => (
                 <div
                   key={item}
