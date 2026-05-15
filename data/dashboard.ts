@@ -18,7 +18,6 @@ export type NavItem = {
   label: string;
   href: string;
   icon: LucideIcon;
-  active?: boolean;
 };
 
 export type Metric = {
@@ -30,12 +29,12 @@ export type Metric = {
 };
 
 export const navItems: NavItem[] = [
-  { label: "Overview", href: "#overview", icon: LayoutDashboard, active: true },
+  { label: "Overview", href: "/", icon: LayoutDashboard },
+  { label: "Tracking", href: "/tracking", icon: Zap },
   { label: "Receita", href: "#revenue", icon: LineChart },
   { label: "Clientes", href: "#customers", icon: UsersRound },
   { label: "Operacao", href: "#ops", icon: Gauge },
   { label: "Mensagens", href: "#messages", icon: MessageSquareText },
-  { label: "Seguranca", href: "#security", icon: ShieldCheck },
 ];
 
 export const metrics: Metric[] = [
