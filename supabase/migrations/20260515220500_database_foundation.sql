@@ -20,12 +20,11 @@ $$;
 create table public.clientes (
   id uuid primary key default extensions.gen_random_uuid(),
   external_id text not null,
-  nome text not null,
-  metadata jsonb not null default '{}'::jsonb,
+  payload jsonb not null default '{}'::jsonb,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   constraint clientes_external_id_key unique (external_id),
-  constraint clientes_metadata_object_chk check (jsonb_typeof(metadata) = 'object')
+  constraint clientes_payload_object_chk check (jsonb_typeof(payload) = 'object')
 );
 
 create table public.ctwa_cliques (
@@ -33,7 +32,6 @@ create table public.ctwa_cliques (
   cliente_id uuid not null references public.clientes(id) on delete cascade,
   external_id text not null,
   payload jsonb not null default '{}'::jsonb,
-  clicked_at timestamptz not null default now(),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   constraint ctwa_cliques_cliente_external_id_key unique (cliente_id, external_id),
@@ -58,9 +56,7 @@ create table public.eventos (
   conduzencia_id uuid references public.conduzencias(id) on delete set null,
   ctwa_clique_id uuid references public.ctwa_cliques(id) on delete set null,
   external_id text not null,
-  tipo text not null,
   payload jsonb not null default '{}'::jsonb,
-  occurred_at timestamptz not null default now(),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   constraint eventos_cliente_external_id_key unique (cliente_id, external_id),
@@ -111,9 +107,8 @@ alter table public.eventos enable row level security;
 alter table public.evento_logs enable row level security;
 
 create index clientes_created_at_idx on public.clientes (created_at desc);
-create index clientes_metadata_gin_idx on public.clientes using gin (metadata);
+create index clientes_payload_gin_idx on public.clientes using gin (payload);
 
-create index ctwa_cliques_cliente_clicked_at_idx on public.ctwa_cliques (cliente_id, clicked_at desc);
 create index ctwa_cliques_cliente_created_at_idx on public.ctwa_cliques (cliente_id, created_at desc);
 create index ctwa_cliques_payload_gin_idx on public.ctwa_cliques using gin (payload);
 
@@ -121,8 +116,7 @@ create index conduzencias_cliente_created_at_idx on public.conduzencias (cliente
 create index conduzencias_ctwa_clique_id_idx on public.conduzencias (ctwa_clique_id);
 create index conduzencias_payload_gin_idx on public.conduzencias using gin (payload);
 
-create index eventos_cliente_occurred_at_idx on public.eventos (cliente_id, occurred_at desc);
-create index eventos_cliente_tipo_occurred_at_idx on public.eventos (cliente_id, tipo, occurred_at desc);
+create index eventos_cliente_created_at_idx on public.eventos (cliente_id, created_at desc);
 create index eventos_conduzencia_id_idx on public.eventos (conduzencia_id);
 create index eventos_ctwa_clique_id_idx on public.eventos (ctwa_clique_id);
 create index eventos_payload_gin_idx on public.eventos using gin (payload);
