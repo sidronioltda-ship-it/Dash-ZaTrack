@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -53,8 +54,25 @@ function ChartTooltip({
 }
 
 export function RevenueChart() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <div className="h-[310px] w-full">
+      {!mounted ? (
+        <div className="flex size-full items-end gap-3 rounded-[1.5rem] bg-white/[0.03] p-4">
+          {[44, 62, 58, 76, 82, 88, 96].map((height, index) => (
+            <div
+              key={`${height}-${index}`}
+              className="flex-1 rounded-t-2xl bg-primary/20"
+              style={{ height: `${height}%` }}
+            />
+          ))}
+        </div>
+      ) : (
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={revenueData} margin={{ left: -20, right: 10, top: 10 }}>
           <defs>
@@ -100,6 +118,7 @@ export function RevenueChart() {
           />
         </AreaChart>
       </ResponsiveContainer>
+      )}
     </div>
   );
 }
