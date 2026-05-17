@@ -136,5 +136,5 @@ export const commandItems = [
   { label: "Live sync", icon: Zap },
   { label: "Supabase ready", icon: DatabaseZap },
   { label: "99.97% uptime", icon: ShieldCheck },
-  { label: "AI scoring", icon: Sparkles },
+  { label: "Signal scoring", icon: Sparkles },
 ];

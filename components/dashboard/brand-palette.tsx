@@ -4,17 +4,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function BrandPalette() {
   return (
-    <Card className="glass-panel overflow-hidden">
+    <Card className="premium-surface overflow-hidden">
       <CardHeader>
         <CardTitle>Identidade visual</CardTitle>
+        <p className="text-sm text-muted-foreground">
+          Tokens aplicados com contraste operacional.
+        </p>
       </CardHeader>
       <CardContent>
-        <div className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#0f0f0f] p-0">
+        <div className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#0f0f0f] p-0 shadow-inner">
           {colorTokens.map((token, index) => (
             <div
               key={token.label}
               className={cn(
-                "flex h-16 items-center px-6 font-mono text-sm tracking-[0.18em]",
+                "flex h-12 items-center px-5 font-mono text-xs tracking-[0.18em] transition-transform duration-300 hover:translate-x-1 sm:h-14",
                 token.className,
                 token.text,
               )}
