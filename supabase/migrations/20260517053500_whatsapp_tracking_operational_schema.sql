@@ -164,24 +164,6 @@ alter table public.leads
   add column if not exists payload_last jsonb,
   add column if not exists email text;
 
-create table if not exists public.eventos (
-  id uuid not null default extensions.gen_random_uuid(),
-  event_name text not null,
-  event_id text,
-  pixel_id text,
-  value numeric,
-  currency text default ''::text,
-  lead_id uuid,
-  payload_raw jsonb,
-  "timestamp" timestamp without time zone default now(),
-  status text,
-  phone text,
-  success text,
-  status_code numeric,
-  error_message text,
-  constraint eventos_pkey primary key (id)
-);
-
 alter table public.eventos
   add column if not exists event_name text,
   add column if not exists event_id text,
@@ -210,65 +192,6 @@ alter table public.event_logs
   add column if not exists event_id uuid,
   add column if not exists meta_response jsonb,
   add column if not exists created_at timestamp without time zone default now();
-
-do $$
-begin
-  if not exists (
-    select 1
-    from pg_constraint
-    where conrelid = 'public.clients'::regclass
-      and conname = 'clients_created_at_required_chk'
-  ) then
-    alter table public.clients
-      add constraint clients_created_at_required_chk
-      check (created_at is not null) not valid;
-  end if;
-
-  if not exists (
-    select 1
-    from pg_constraint
-    where conrelid = 'public.ctwa_clicks'::regclass
-      and conname = 'ctwa_clicks_client_id_required_chk'
-  ) then
-    alter table public.ctwa_clicks
-      add constraint ctwa_clicks_client_id_required_chk
-      check (client_id is not null) not valid;
-  end if;
-
-  if not exists (
-    select 1
-    from pg_constraint
-    where conrelid = 'public.ctwa_clicks'::regclass
-      and conname = 'ctwa_clicks_click_timestamp_required_chk'
-  ) then
-    alter table public.ctwa_clicks
-      add constraint ctwa_clicks_click_timestamp_required_chk
-      check (click_timestamp is not null) not valid;
-  end if;
-
-  if not exists (
-    select 1
-    from pg_constraint
-    where conrelid = 'public.eventos'::regclass
-      and conname = 'eventos_event_name_required_chk'
-  ) then
-    alter table public.eventos
-      add constraint eventos_event_name_required_chk
-      check (event_name is not null) not valid;
-  end if;
-
-  if not exists (
-    select 1
-    from pg_constraint
-    where conrelid = 'public.event_logs'::regclass
-      and conname = 'event_logs_event_id_required_chk'
-  ) then
-    alter table public.event_logs
-      add constraint event_logs_event_id_required_chk
-      check (event_id is not null) not valid;
-  end if;
-end;
-$$;
 
 do $$
 begin
