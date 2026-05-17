@@ -1,10 +1,11 @@
 import { DashboardSidebar } from "@/components/dashboard/sidebar";
 import { TopBar } from "@/components/dashboard/top-bar";
-import { AnalyticsFoundationPanel } from "@/features/dashboard/components/analytics-foundation-panel";
 import { DashboardFilterBar } from "@/features/dashboard/components/dashboard-filter-bar";
 import { DashboardHero } from "@/features/dashboard/components/dashboard-hero";
 import { KpiSection } from "@/features/dashboard/components/kpi-section";
+import { PlanRankingSection } from "@/features/dashboard/components/plan-ranking-section";
 import { RealtimeReadinessPanel } from "@/features/dashboard/components/realtime-readiness-panel";
+import { SalesByHourChart } from "@/features/dashboard/components/sales-by-hour-chart";
 
 export function DashboardCoreShell() {
   return (
@@ -15,7 +16,8 @@ export function DashboardCoreShell() {
         <DashboardHero />
         <DashboardFilterBar />
         <KpiSection />
-        <AnalyticsFoundationPanel />
+        <PlanRankingSection />
+        <SalesByHourChart />
         <RealtimeReadinessPanel />
       </div>
     </main>

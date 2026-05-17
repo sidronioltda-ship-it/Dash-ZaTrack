@@ -2,6 +2,15 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import {
+  formatCurrency,
+  formatDecimal,
+  formatNumber,
+  getMetricDateRange,
+  getTrafficSourceLabel,
+  normalize,
+  toNumber,
+} from "@/features/dashboard/services/dashboard-data-utils";
 import type {
   DashboardFilters,
   DashboardKpi,
@@ -66,77 +75,6 @@ const analyticsViews = [
   "analytics_campaign_performance",
   "analytics_purchase_funnel",
 ];
-
-function formatCurrency(value: number) {
-  return new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-    maximumFractionDigits: 0,
-  }).format(value);
-}
-
-function formatNumber(value: number) {
-  return new Intl.NumberFormat("pt-BR", {
-    maximumFractionDigits: 0,
-  }).format(value);
-}
-
-function formatDecimal(value: number, suffix = "") {
-  return `${new Intl.NumberFormat("pt-BR", {
-    maximumFractionDigits: 2,
-    minimumFractionDigits: value > 0 && value < 10 ? 1 : 0,
-  }).format(value)}${suffix}`;
-}
-
-function toNumber(value: number | string | null | undefined) {
-  if (typeof value === "number") {
-    return Number.isFinite(value) ? value : 0;
-  }
-
-  if (!value) {
-    return 0;
-  }
-
-  const normalizedValue = String(value).replace(",", ".");
-  const parsedValue = Number(normalizedValue);
-
-  return Number.isFinite(parsedValue) ? parsedValue : 0;
-}
-
-function getMetricDateRange(filters: DashboardFilters) {
-  const endDate = new Date();
-  const startDate = new Date(endDate);
-  const daysByPeriod = {
-    today: 0,
-    "7d": 6,
-    "30d": 29,
-    "90d": 89,
-  };
-
-  startDate.setUTCDate(startDate.getUTCDate() - daysByPeriod[filters.period]);
-
-  return {
-    startDate: startDate.toISOString().slice(0, 10),
-    endDate: endDate.toISOString().slice(0, 10),
-    startIso: startDate.toISOString(),
-  };
-}
-
-function getTrafficSourceLabel(filters: DashboardFilters) {
-  const sourceByFilter = {
-    all: null,
-    meta_ads: "meta ads",
-    whatsapp: "whatsapp",
-    organic: "organic",
-    checkout: "checkout",
-  } satisfies Record<DashboardFilters["trafficSource"], string | null>;
-
-  return sourceByFilter[filters.trafficSource];
-}
-
-function normalize(value: string | null | undefined) {
-  return value?.trim().toLowerCase() ?? "";
-}
 
 function getLineageKey(row: {
   campaign_id: string | null;

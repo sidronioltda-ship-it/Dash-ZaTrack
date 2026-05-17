@@ -73,3 +73,45 @@ export type DashboardKpiSnapshot = {
   efficiencyKpis: DashboardKpi[];
   unsupportedFilters: string[];
 };
+
+export type PlanRankingTrend = "up" | "down" | "stable";
+
+export type PlanRankingItem = {
+  planName: string;
+  approvedSales: number;
+  revenue: number;
+  sharePercent: number;
+  averageTicket: number;
+  operationalConversion: number;
+  trend: PlanRankingTrend;
+  trendPercent: number;
+};
+
+export type PlanRankingSnapshot = {
+  generatedAt: string;
+  filters: DashboardFilters;
+  source: "supabase";
+  items: PlanRankingItem[];
+  totalRevenue: number;
+  totalApprovedSales: number;
+  views: string[];
+  unsupportedFilters: string[];
+};
+
+export type SalesByHourBucket = {
+  hour: string;
+  hourNumber: number;
+  sales: number;
+  percent: number;
+  revenue: number;
+};
+
+export type SalesByHourSnapshot = {
+  generatedAt: string;
+  filters: DashboardFilters;
+  source: "supabase";
+  buckets: SalesByHourBucket[];
+  totalSales: number;
+  totalRevenue: number;
+  unsupportedFilters: string[];
+};
