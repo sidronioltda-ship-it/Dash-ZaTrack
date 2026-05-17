@@ -134,7 +134,7 @@ export const colorTokens = [
 
 export const commandItems = [
   { label: "Live sync", icon: Zap },
-  { label: "Supabase ready", icon: DatabaseZap },
+  { label: "Analytics layer", icon: DatabaseZap },
   { label: "99.97% uptime", icon: ShieldCheck },
   { label: "Signal scoring", icon: Sparkles },
 ];
