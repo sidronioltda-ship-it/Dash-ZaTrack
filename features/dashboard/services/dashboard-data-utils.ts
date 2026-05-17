@@ -36,6 +36,25 @@ export function toNumber(value: number | string | null | undefined) {
   return Number.isFinite(parsedValue) ? parsedValue : 0;
 }
 
+export function extractPayloadNumber(
+  payload: Record<string, unknown> | null,
+  keys: string[],
+) {
+  if (!payload) {
+    return 0;
+  }
+
+  for (const key of keys) {
+    const value = payload[key];
+
+    if (typeof value === "number" || typeof value === "string") {
+      return toNumber(value);
+    }
+  }
+
+  return 0;
+}
+
 export function getMetricDateRange(filters: DashboardFilters) {
   const endDate = new Date();
   const startDate = new Date(endDate);
@@ -69,6 +88,26 @@ export function getTrafficSourceLabel(filters: DashboardFilters) {
 
 export function normalize(value: string | null | undefined) {
   return value?.trim().toLowerCase() ?? "";
+}
+
+export function getLineageKey(row: {
+  campaign_id: string | null;
+  adset_id: string | null;
+  ad_id: string | null;
+}) {
+  return [row.campaign_id ?? "", row.adset_id ?? "", row.ad_id ?? ""].join("|");
+}
+
+export function matchesLineageFilter<T extends {
+  campaign_id: string | null;
+  adset_id: string | null;
+  ad_id: string | null;
+}>(row: T, allowedLineageKeys: Set<string> | null) {
+  if (!allowedLineageKeys) {
+    return true;
+  }
+
+  return allowedLineageKeys.has(getLineageKey(row));
 }
 
 export function isSuccessfulPurchase(row: {

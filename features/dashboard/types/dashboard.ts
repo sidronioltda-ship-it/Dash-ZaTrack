@@ -115,3 +115,34 @@ export type SalesByHourSnapshot = {
   totalRevenue: number;
   unsupportedFilters: string[];
 };
+
+export type WhatsAppFunnelStageKey =
+  | "impressions"
+  | "link_clicks"
+  | "started_conversations"
+  | "qualified_leads"
+  | "initiate_checkout"
+  | "sales";
+
+export type WhatsAppFunnelStage = {
+  key: WhatsAppFunnelStageKey;
+  label: string;
+  value: number;
+  displayValue: number;
+  conversionFromPrevious: number | null;
+  dropFromPrevious: number | null;
+  shareOfReference: number;
+  thickness: number;
+  helper: string;
+};
+
+export type WhatsAppFunnelSnapshot = {
+  generatedAt: string;
+  filters: DashboardFilters;
+  source: "supabase";
+  stages: WhatsAppFunnelStage[];
+  referenceValue: number;
+  referenceLabel: string;
+  isImpressionReferenceAvailable: boolean;
+  unsupportedFilters: string[];
+};

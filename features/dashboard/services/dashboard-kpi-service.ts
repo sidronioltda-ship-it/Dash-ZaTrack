@@ -6,8 +6,11 @@ import {
   formatCurrency,
   formatDecimal,
   formatNumber,
+  extractPayloadNumber,
   getMetricDateRange,
   getTrafficSourceLabel,
+  getLineageKey,
+  matchesLineageFilter,
   normalize,
   toNumber,
 } from "@/features/dashboard/services/dashboard-data-utils";
@@ -76,51 +79,12 @@ const analyticsViews = [
   "analytics_purchase_funnel",
 ];
 
-function getLineageKey(row: {
-  campaign_id: string | null;
-  adset_id: string | null;
-  ad_id: string | null;
-}) {
-  return [row.campaign_id ?? "", row.adset_id ?? "", row.ad_id ?? ""].join("|");
-}
-
-function matchesLineageFilter<T extends {
-  campaign_id: string | null;
-  adset_id: string | null;
-  ad_id: string | null;
-}>(row: T, allowedLineageKeys: Set<string> | null) {
-  if (!allowedLineageKeys) {
-    return true;
-  }
-
-  return allowedLineageKeys.has(getLineageKey(row));
-}
-
 function matchesProductFilter(row: RevenueRow, filters: DashboardFilters) {
   if (filters.product === "all") {
     return true;
   }
 
   return normalize(row.plan_name).includes(filters.product.replaceAll("_", " "));
-}
-
-function extractPayloadAmount(
-  payload: Record<string, unknown> | null,
-  keys: string[],
-) {
-  if (!payload) {
-    return 0;
-  }
-
-  for (const key of keys) {
-    const value = payload[key];
-
-    if (typeof value === "number" || typeof value === "string") {
-      return toNumber(value);
-    }
-  }
-
-  return 0;
 }
 
 function createCostKpi(
@@ -278,7 +242,7 @@ export async function getDashboardKpis(
   const trafficSpend = ctwaRows.reduce(
     (total, row) =>
       total +
-      extractPayloadAmount(row.payload_raw, [
+      extractPayloadNumber(row.payload_raw, [
         "amount_spent",
         "spend",
         "traffic_spend",
@@ -289,7 +253,7 @@ export async function getDashboardKpis(
   const metaAdsTax = ctwaRows.reduce(
     (total, row) =>
       total +
-      extractPayloadAmount(row.payload_raw, [
+      extractPayloadNumber(row.payload_raw, [
         "meta_ads_tax",
         "tax",
         "tax_amount",

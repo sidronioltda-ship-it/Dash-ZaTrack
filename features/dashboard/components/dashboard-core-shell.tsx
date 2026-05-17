@@ -6,6 +6,7 @@ import { KpiSection } from "@/features/dashboard/components/kpi-section";
 import { PlanRankingSection } from "@/features/dashboard/components/plan-ranking-section";
 import { RealtimeReadinessPanel } from "@/features/dashboard/components/realtime-readiness-panel";
 import { SalesByHourChart } from "@/features/dashboard/components/sales-by-hour-chart";
+import { WhatsAppFunnelSection } from "@/features/dashboard/components/whatsapp-funnel-section";
 
 export function DashboardCoreShell() {
   return (
@@ -16,6 +17,7 @@ export function DashboardCoreShell() {
         <DashboardHero />
         <DashboardFilterBar />
         <KpiSection />
+        <WhatsAppFunnelSection />
         <PlanRankingSection />
         <SalesByHourChart />
         <RealtimeReadinessPanel />
