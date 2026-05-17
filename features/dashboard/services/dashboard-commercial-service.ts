@@ -36,7 +36,13 @@ const commercialViews = [
 ];
 
 function getPlanName(row: RevenueRow) {
-  return row.plan_name?.trim() || "Plano nao identificado";
+  const planName = row.plan_name?.trim();
+
+  if (!planName || normalize(planName) === "unknown") {
+    return "Plano nao identificado";
+  }
+
+  return planName;
 }
 
 function getRevenueValue(row: RevenueRow) {
