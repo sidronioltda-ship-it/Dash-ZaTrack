@@ -63,6 +63,7 @@ select
   (e.created_at at time zone 'UTC')::date as metric_date,
   e.pixel_id,
   coalesce(nullif(e.currency, ''), 'BRL') as currency,
+  coalesce(nullif(to_jsonb(e)->>'plan_name', ''), 'unknown') as plan_name,
   count(*) filter (
     where lower(coalesce(e.event_name, '')) = 'purchase'
   ) as purchase_events,
@@ -73,6 +74,15 @@ select
   coalesce(sum(e.value) filter (
     where lower(coalesce(e.event_name, '')) = 'purchase'
   ), 0) as gross_revenue,
+  coalesce(sum(
+    case
+      when (to_jsonb(e)->>'commission_value') ~ '^-?[0-9]+([.,][0-9]+)?$'
+        then replace(to_jsonb(e)->>'commission_value', ',', '.')::numeric
+      else 0
+    end
+  ) filter (
+    where lower(coalesce(e.event_name, '')) = 'purchase'
+  ), 0) as commission_revenue,
   count(*) filter (
     where lower(coalesce(e.status, '')) in ('error', 'failed', 'failure')
       or e.status_code >= 400
@@ -83,7 +93,8 @@ from public.eventos e
 group by
   (e.created_at at time zone 'UTC')::date,
   e.pixel_id,
-  coalesce(nullif(e.currency, ''), 'BRL');
+  coalesce(nullif(e.currency, ''), 'BRL'),
+  coalesce(nullif(to_jsonb(e)->>'plan_name', ''), 'unknown');
 
 create or replace view public.analytics_daily_leads as
 select
@@ -125,6 +136,15 @@ with event_metrics_by_lead as (
     coalesce(sum(e.value) filter (
       where lower(coalesce(e.event_name, '')) = 'purchase'
     ), 0) as gross_revenue,
+    coalesce(sum(
+      case
+        when (to_jsonb(e)->>'commission_value') ~ '^-?[0-9]+([.,][0-9]+)?$'
+          then replace(to_jsonb(e)->>'commission_value', ',', '.')::numeric
+        else 0
+      end
+    ) filter (
+      where lower(coalesce(e.event_name, '')) = 'purchase'
+    ), 0) as commission_revenue,
     count(e.id) filter (
       where lower(coalesce(e.status, '')) in ('error', 'failed', 'failure')
         or e.status_code >= 400
@@ -146,6 +166,7 @@ select
   coalesce(sum(em.purchase_events), 0) as purchase_events,
   coalesce(sum(em.successful_purchase_events), 0) as successful_purchase_events,
   coalesce(sum(em.gross_revenue), 0) as gross_revenue,
+  coalesce(sum(em.commission_revenue), 0) as commission_revenue,
   coalesce(sum(em.failed_events), 0) as failed_events,
   min(l.created_at) as first_lead_at,
   max(l.created_at) as last_lead_at
@@ -196,7 +217,16 @@ event_metrics as (
     ) as successful_purchase_events,
     coalesce(sum(e.value) filter (
       where lower(coalesce(e.event_name, '')) = 'purchase'
-    ), 0) as gross_revenue
+    ), 0) as gross_revenue,
+    coalesce(sum(
+      case
+        when (to_jsonb(e)->>'commission_value') ~ '^-?[0-9]+([.,][0-9]+)?$'
+          then replace(to_jsonb(e)->>'commission_value', ',', '.')::numeric
+        else 0
+      end
+    ) filter (
+      where lower(coalesce(e.event_name, '')) = 'purchase'
+    ), 0) as commission_revenue
   from public.leads l
   left join public.eventos e on e.lead_id = l.id
   group by
@@ -218,6 +248,7 @@ select
   coalesce(em.purchase_events, 0) as purchase_events,
   coalesce(em.successful_purchase_events, 0) as successful_purchase_events,
   coalesce(em.gross_revenue, 0) as gross_revenue,
+  coalesce(em.commission_revenue, 0) as commission_revenue,
   case
     when lm.leads_count > 0
       then coalesce(em.checkout_events, 0)::numeric / lm.leads_count
