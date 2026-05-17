@@ -31,22 +31,45 @@ export type DashboardFilterAction =
   | { type: "reset" };
 
 export type DashboardKpiKey =
-  | "leads_today"
-  | "purchases_today"
-  | "revenue"
-  | "commission"
-  | "conversion";
+  | "net_revenue"
+  | "traffic_spend"
+  | "meta_ads_tax"
+  | "roi"
+  | "profit"
+  | "link_clicks"
+  | "cpc"
+  | "started_conversations"
+  | "cpv"
+  | "qualified_leads"
+  | "cpl"
+  | "checkout_initiated"
+  | "cpi"
+  | "approved_purchases"
+  | "cpa"
+  | "average_ticket"
+  | "clicks_per_conversation"
+  | "conversations_per_lead"
+  | "conversations_per_checkout"
+  | "conversations_per_sale"
+  | "conversation_to_sale_rate";
 
 export type DashboardKpi = {
   key: DashboardKpiKey;
   label: string;
   value: string;
   helper: string;
-  trend: string;
+  detail?: string;
+  tone?: "default" | "success" | "warning" | "muted";
+  emphasis?: boolean;
 };
 
 export type DashboardKpiSnapshot = {
   generatedAt: string;
   filters: DashboardFilters;
-  kpis: DashboardKpi[];
+  source: "supabase";
+  views: string[];
+  financialKpis: DashboardKpi[];
+  operationalKpis: DashboardKpi[];
+  efficiencyKpis: DashboardKpi[];
+  unsupportedFilters: string[];
 };

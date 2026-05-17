@@ -41,6 +41,7 @@ const platforms: { label: string; value: DashboardPlatform }[] = [
 
 const products = [
   { label: "Todos produtos", value: "all" },
+  { label: "Cronograma tratamento", value: "cronograma tratamento" },
   { label: "ZaTrack Core", value: "zatrack_core" },
   { label: "Mentoria WhatsApp", value: "mentoria_whatsapp" },
   { label: "Checkout Scale", value: "checkout_scale" },
