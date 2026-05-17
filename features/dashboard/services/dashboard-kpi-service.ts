@@ -201,6 +201,36 @@ function createCostKpi(
   };
 }
 
+function formatEfficiencyRatio({
+  basePlural,
+  baseSingular,
+  denominator,
+  emptyLabel,
+  numerator,
+  outcomePlural,
+  outcomeSingular,
+}: {
+  numerator: number;
+  denominator: number;
+  outcomeSingular: string;
+  outcomePlural: string;
+  baseSingular: string;
+  basePlural: string;
+  emptyLabel: string;
+}) {
+  if (numerator <= 0 || denominator <= 0) {
+    return emptyLabel;
+  }
+
+  const basePerOutcome = numerator / denominator;
+
+  if (basePerOutcome >= 1) {
+    return `1 ${outcomeSingular} a cada ${formatDecimal(basePerOutcome)} ${basePlural}`;
+  }
+
+  return `${formatDecimal(denominator / numerator)} ${outcomePlural} por ${baseSingular}`;
+}
+
 export async function getDashboardKpis(
   filters: DashboardFilters,
 ): Promise<DashboardKpiSnapshot> {
@@ -475,37 +505,57 @@ export async function getDashboardKpis(
       {
         key: "clicks_per_conversation",
         label: "Clique → Conversa",
-        value:
-          startedConversations > 0
-            ? `1 Conversa a cada ${formatDecimal(linkClicks / startedConversations)} Cliques`
-            : "Sem conversas",
+        value: formatEfficiencyRatio({
+          numerator: linkClicks,
+          denominator: startedConversations,
+          outcomeSingular: "Conversa",
+          outcomePlural: "Conversas",
+          baseSingular: "Clique",
+          basePlural: "Cliques",
+          emptyLabel: "Sem cliques CTWA",
+        }),
         helper: "Velocidade de aquisicao CTWA",
       },
       {
         key: "conversations_per_lead",
         label: "Conversa → Lead",
-        value:
-          qualifiedLeads > 0
-            ? `1 Lead a cada ${formatDecimal(startedConversations / qualifiedLeads)} Conversas`
-            : "Sem leads",
+        value: formatEfficiencyRatio({
+          numerator: startedConversations,
+          denominator: qualifiedLeads,
+          outcomeSingular: "Lead",
+          outcomePlural: "Leads",
+          baseSingular: "Conversa",
+          basePlural: "Conversas",
+          emptyLabel: "Sem leads",
+        }),
         helper: "Qualificacao por telefone",
       },
       {
         key: "conversations_per_checkout",
         label: "Conversa → IC",
-        value:
-          checkoutInitiated > 0
-            ? `1 IC a cada ${formatDecimal(startedConversations / checkoutInitiated)} Conversas`
-            : "Sem ICs",
+        value: formatEfficiencyRatio({
+          numerator: startedConversations,
+          denominator: checkoutInitiated,
+          outcomeSingular: "IC",
+          outcomePlural: "ICs",
+          baseSingular: "Conversa",
+          basePlural: "Conversas",
+          emptyLabel: "Sem ICs",
+        }),
         helper: "Intencao de compra",
       },
       {
         key: "conversations_per_sale",
         label: "Conversa → Venda",
-        value:
-          approvedPurchases > 0
-            ? `1 Venda a cada ${formatDecimal(startedConversations / approvedPurchases)} Conversas`
-            : "Sem vendas",
+        value: formatEfficiencyRatio({
+          numerator: startedConversations,
+          denominator: approvedPurchases,
+          outcomeSingular: "Venda",
+          outcomePlural: "Vendas",
+          baseSingular: "Conversa",
+          basePlural: "Conversas",
+          emptyLabel: "Sem vendas",
+        }),
         helper: "Eficiencia comercial",
       },
       {
