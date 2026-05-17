@@ -150,3 +150,83 @@ body {
     inset 0 1px 0 rgba(248, 248, 248, 0.08);
   backdrop-filter: blur(28px);
 }
+
+.premium-surface {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(248, 248, 248, 0.095);
+  background:
+    linear-gradient(180deg, rgba(248, 248, 248, 0.07), rgba(248, 248, 248, 0.025)),
+    rgba(15, 15, 15, 0.76);
+  box-shadow:
+    0 18px 64px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(248, 248, 248, 0.075);
+  backdrop-filter: blur(28px);
+}
+
+.premium-surface::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 16% 0%, rgba(93, 214, 44, 0.09), transparent 34%),
+    linear-gradient(120deg, rgba(248, 248, 248, 0.045), transparent 38%);
+  opacity: 0.84;
+}
+
+.premium-surface > * {
+  position: relative;
+}
+
+.premium-surface:hover {
+  border-color: rgba(248, 248, 248, 0.14);
+  box-shadow:
+    0 20px 70px rgba(0, 0, 0, 0.32),
+    0 0 0 1px rgba(93, 214, 44, 0.035),
+    inset 0 1px 0 rgba(248, 248, 248, 0.09);
+}
+
+.premium-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(90deg, rgba(248, 248, 248, 0.055), rgba(248, 248, 248, 0.09), rgba(248, 248, 248, 0.055));
+}
+
+.premium-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(93, 214, 44, 0.13), transparent);
+  animation: premium-shimmer 1.8s ease-in-out infinite;
+}
+
+.operational-state {
+  border: 1px solid rgba(245, 158, 11, 0.18);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(245, 158, 11, 0.12), transparent 38%),
+    linear-gradient(180deg, rgba(245, 158, 11, 0.06), rgba(248, 248, 248, 0.025));
+  box-shadow:
+    0 18px 56px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(248, 248, 248, 0.07);
+}
+
+.developer-observability {
+  color: rgba(248, 248, 248, 0.44);
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  letter-spacing: 0.04em;
+}
+
+@keyframes premium-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .premium-skeleton::after {
+    animation: none;
+  }
+}

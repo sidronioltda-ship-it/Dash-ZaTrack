@@ -6,16 +6,16 @@ import { Card } from "@/components/ui/card";
 
 const toneClassName: Record<Metric["tone"], string> = {
   lime:
-    "bg-primary text-primary-foreground shadow-[0_24px_80px_rgba(93,214,44,0.25)]",
-  dark: "bg-[#202020] text-[#f8f8f8]",
-  white: "bg-[#f8f8f8] text-[#202020]",
+    "border-primary/25 bg-primary text-primary-foreground shadow-[0_18px_58px_rgba(93,214,44,0.18)]",
+  dark: "border-white/10 bg-[#202020]/85 text-[#f8f8f8]",
+  white: "border-white/10 bg-[#f8f8f8] text-[#202020]",
 };
 
 export function MetricCard({ metric }: { metric: Metric }) {
   return (
     <Card
       className={cn(
-        "group overflow-hidden border-white/10 p-5 transition-transform duration-300 hover:-translate-y-1",
+        "group overflow-hidden p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-[0_20px_70px_rgba(0,0,0,0.3)] sm:p-5",
         toneClassName[metric.tone],
       )}
     >
@@ -28,13 +28,13 @@ export function MetricCard({ metric }: { metric: Metric }) {
           <ArrowUpRight className="size-3" />
         </span>
       </div>
-      <div className="mt-8">
+      <div className="mt-6">
         <p className="text-sm opacity-70">{metric.label}</p>
         <p className="mt-2 text-3xl font-semibold tracking-tight">
           {metric.value}
         </p>
       </div>
-      <div className="mt-6 h-1.5 overflow-hidden rounded-full bg-black/10">
+      <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-black/10">
         <div className="h-full w-3/4 rounded-full bg-current opacity-40 transition-all duration-500 group-hover:w-full" />
       </div>
     </Card>

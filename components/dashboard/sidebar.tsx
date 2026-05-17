@@ -10,7 +10,7 @@ import { Separator } from "@/components/ui/separator";
 export function DashboardSidebar() {
   return (
     <aside className="glass-panel fixed inset-y-4 left-4 z-30 hidden w-[280px] overflow-hidden rounded-[2rem] lg:flex lg:flex-col">
-      <div className="absolute inset-x-0 top-0 h-48 bg-[radial-gradient(circle_at_50%_0%,rgba(93,214,44,0.22),transparent_72%)]" />
+      <div className="absolute inset-x-0 top-0 h-48 bg-[radial-gradient(circle_at_50%_0%,rgba(93,214,44,0.18),transparent_72%)]" />
       <div className="relative flex items-center gap-3 p-5">
         <div className="grid size-11 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-[0_0_40px_rgba(93,214,44,0.36)]">
           <Command className="size-5" />
@@ -32,9 +32,9 @@ export function DashboardSidebar() {
               key={item.label}
               href={item.href}
               className={cn(
-                "group flex items-center justify-between rounded-2xl px-3 py-3 text-sm text-muted-foreground transition-all hover:bg-white/8 hover:text-foreground",
+                "group flex items-center justify-between rounded-2xl px-3 py-3 text-sm text-muted-foreground transition-all duration-300 hover:bg-white/[0.07] hover:text-foreground",
                 item.active &&
-                  "bg-primary text-primary-foreground shadow-[0_14px_44px_rgba(93,214,44,0.26)] hover:bg-primary hover:text-primary-foreground",
+                  "bg-primary text-primary-foreground shadow-[0_12px_36px_rgba(93,214,44,0.2)] hover:bg-primary hover:text-primary-foreground",
               )}
             >
               <span className="flex items-center gap-3">
@@ -51,7 +51,7 @@ export function DashboardSidebar() {
         </div>
       </ScrollArea>
 
-      <div className="relative m-3 rounded-[1.75rem] border border-white/10 bg-[#202020]/80 p-4">
+      <div className="relative m-3 rounded-[1.75rem] border border-white/10 bg-[#202020]/75 p-4 shadow-inner">
         <div className="mb-4 flex items-center justify-between">
           <Badge>Premium</Badge>
           <span className="flex items-center gap-1 text-xs text-primary">
@@ -59,7 +59,7 @@ export function DashboardSidebar() {
             Live
           </span>
         </div>
-        <p className="text-sm font-medium">Dark sidebar suite</p>
+        <p className="text-sm font-medium">Operational sidebar</p>
         <p className="mt-1 text-xs leading-5 text-muted-foreground">
           Navegacao compacta, glassmorphism e tokens visuais da referencia.
         </p>
